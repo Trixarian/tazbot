@@ -47,8 +47,8 @@ def part(target):
 	send("PART %s" % target)
 
 def quit():
-	global running, sock
-	send("QUIT :Bye :(")
+	global running, sock, QUITMSG
+	send("QUIT :%s" % QUITMSG)
 	running = False
 	sock.close()
 	sys.exit(0)
@@ -81,9 +81,13 @@ def parse(msg):
 		for x in CHANNELS:
 			if x is "": pass
 			else: join(x)
+
 	if msg[1] == "JOIN":
+		global ONJOIN
 		nick = getnick(msg[0])
-		notice(nick, "Hey %s, I can answer your questions. Type \"TazBot: help\" to learn how to use me!" % nick)
+		msg = ONJOIN.replace("#botnick", NICK)
+		msg = msg.replace("#nick", nick)
+		notice(nick, msg)
 
 	if msg[1] == "PRIVMSG":
 		chan = msg[2]
@@ -95,12 +99,12 @@ def parse(msg):
 			cmd = ""
 			args = ""
 		if chan[:1] == "#":
-			main.chan_parse(chan, nick, cmd, args)
+			main.msg_parse(chan, nick, cmd, args)
 		else:
-			main.prvt_parse(nick, cmd, args)
+			main.msg_parse(nick, nick, cmd, args, 1)
 
 def loop():
-	global sock, running, NICK, CHANNELS, BOTMASTERS
+	global sock, running, NICK, CHANNELS, BOTMASTERS, ONJOIN, HELP, NOHELP, QUITMSG
 	running = True
 	buffer = ""
 	BOTMASTERS = readconf("BOTMASTERS")
@@ -109,7 +113,11 @@ def loop():
 	NICK = readconf("NICK")
 	IDENT = readconf("IDENT")
 	REALNAME = readconf("REALNAME")
+	QUITMSG = readconf("QUITMSG")
 	CHANNELS = str(readconf("CHANNELS")).split()
+	ONJOIN = readconf("ONJOIN")
+	HELP = readconf("HELP")
+	NOHELP = readconf("NOHELP")
 
 	## Connect to IRC ##
 	sock=socket.socket()

@@ -78,7 +78,7 @@ def dbwrite(key, value):
 #################
 # QBot's parser #
 #################
-def chan_parse(chan, nick, cmd, args):
+def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 	if cmd == "!teach" or cmd == "!learn":
 		iscmd = 1
 		if nick in ircbot.BOTMASTERS:
@@ -95,9 +95,9 @@ def chan_parse(chan, nick, cmd, args):
 				else:
 					value = doesschool.split("|")[1].strip()
 					dbwrite(key[0:], botfilter(value[0:]))
-				ircbot.msg(chan, "New response learned for %s" % key)
-			except: ircbot.msg(chan, "Sorry, I couldn't learn that!")
-		else: ircbot.msg(chan, "Sorry %s, only my masters can teach me!" % nick)
+				ircbot.msg(dest, "New response learned for %s" % key)
+			except: ircbot.msg(dest, "Sorry, I couldn't learn that!")
+		else: ircbot.msg(dest, "Sorry %s, only my masters can teach me!" % nick)
 
 	if cmd == "!forget":
 		iscmd = 1
@@ -112,10 +112,10 @@ def chan_parse(chan, nick, cmd, args):
 						if re.search(key2, data, re.IGNORECASE) or re.search(data2, key, re.IGNORECASE):
 							pass
 						else: print line.strip()
-					ircbot.msg(chan, "I've forgotten %s" % key)
-				except: ircbot.msg(chan, "Sorry, I couldn't forget that!")
-			else: ircbot.msg(chan, "You have to teach me something before you can make me forget it!")
-		else: ircbot.msg(chan, "Sorry %s, only my masters can make me forget!" % nick)
+					ircbot.msg(dest, "I've forgotten %s" % key)
+				except: ircbot.msg(dest, "Sorry, I couldn't forget that!")
+			else: ircbot.msg(dest, "You have to teach me something before you can make me forget it!")
+		else: ircbot.msg(dest, "Sorry %s, only my masters can make me forget!" % nick)
 
 	if cmd == "!find":
 		iscmd = 1
@@ -138,7 +138,7 @@ def chan_parse(chan, nick, cmd, args):
 			if rcount < 1: msg = "I have no match for %s" % key
 			elif rcount == 1: msg = "I found 1 match: %s" % matches
 			else: msg = "I found %d matches: %s" % (rcount, matches)
-		else: ircbot.msg(chan, "I don't know anything yet!")
+		else: ircbot.msg(dest, "I don't know anything yet!")
 
 	if cmd == "!responses":
 		iscmd = 1
@@ -149,20 +149,23 @@ def chan_parse(chan, nick, cmd, args):
 				if line is "": pass
 				else: rcount = rcount+1
 			file.close()
-			if rcount < 1: ircbot.msg(chan, "I've learned no responses")
-			elif rcount == 1: ircbot.msg(chan, "I've learned %d responses" % rcount)
-			else: ircbot.msg(chan, "I've learned %d responses" % rcount)
-		else: ircbot.msg(chan, "I don't know anything yet!")
+			if rcount < 1: ircbot.msg(dest, "I've learned no responses")
+			elif rcount == 1: ircbot.msg(dest, "I've learned %d responses" % rcount)
+			else: ircbot.msg(dest, "I've learned %d responses" % rcount)
+		else: ircbot.msg(dest, "I don't know anything yet!")
 
 	if cmd == "!quit":
 		iscmd = 1
 		if nick in ircbot.BOTMASTERS:
 			ircbot.quit()
 
-	if ircbot.NICK.lower() in cmd.lower():
-		if "help" in (' '.join(args[0:]).lower()): 
-			ircbot.msg(chan, "I can answer any question directed at me (by putting \"TazBot:\" before the question) that falls within my answers database (use \"TazBot: topics\" to see them). I can also answer questions containing topics (\"TazBot: How do I become root?\").")
-		elif "topics" in (' '.join(args[0:]).lower()):
+	base_key = ("%s %s" % (cmd, ' '.join(args[0:]))).strip()
+	if ircbot.NICK.lower() in base_key.lower() or pvt_msg:
+		if "help" in base_key.lower(): 
+			msg = ircbot.HELP.replace("#botnick", ircbot.NICK)
+			msg = msg.replace("#nick", nick)
+			ircbot.msg(dest, msg)
+		elif "topics" in base_key.lower():
 			if os.path.isfile("qdb.dat"):
 				topics = ""
 				file = open("qdb.dat")
@@ -171,41 +174,41 @@ def chan_parse(chan, nick, cmd, args):
 					if topics == "": topics = key
 					else: topics = topics+", "+key
 				file.close()
-				ircbot.msg(chan, "Help topics: %s" % topics)
-			else: ircbot.msg(chan, "I don't know anything yet!")
+				ircbot.msg(dest, "Help topics: %s" % topics)
+			else: ircbot.msg(dest, "I don't know anything yet!")
 		else:
 			try:
-				key = (' '.join(args[0:])).strip()
-				reply = dbread(key)
+				reply = dbread(base_key)
 				if reply:
 					reply = reply.replace("#nick", nick)
 					reply = botunfilter(reply)
 					if reply[:1] == "+":
-						ircbot.act(chan, "%s" % reply[1:])
+						ircbot.act(dest, "%s" % reply[1:])
 					else:
-						ircbot.msg(chan, "%s: %s" % (nick, reply))
-				else: ircbot.msg(chan, "Sorry %s, I don't have an answer for that (yet)! Try searching the forums (http://forum.slitaz.org/search.php), IRC logs (http://irc.slitaz.org/search/), the documentation (http://doc.slitaz.org) and google for answers. If all else fails, ask on the forums and be patient!" % nick)
+						ircbot.msg(dest, "%s: %s" % (nick, reply))
+				elif args[0] is not "": 
+					msg = ircbot.NOHELP.replace("#botnick", ircbot.NICK)
+					msg = msg.replace("#nick", nick)
+					ircbot.msg(dest, msg)
+				else: pass
 			except: pass
 
-def prvt_parse(nick, cmd, args):
-	## Private Messages ##
-	if cmd == "!join":
-		if nick in ircbot.BOTMASTERS:
-			try:
-				ircbot.join(args[0])
-				ircbot.msg(nick, "Joining %s" % args[0])
-			except: ircbot.msg(nick, "Error joining channel!")
+	if pvt_msg:
+		## Private Messages ##
+		if cmd == "!join":
+			if nick in ircbot.BOTMASTERS:
+				try:
+					ircbot.join(args[0])
+					ircbot.msg(dest, "Joining %s" % args[0])
+				except: ircbot.msg(nick, "Error joining channel!")
 
-	if cmd == "!part":
-		if nick in ircbot.BOTMASTERS:
-			try:
-				ircbot.part(args[0])
-				ircbot.msg(nick, "Parting %s" % args[0])
-			except: ircbot.msg(nick, "Error parting channel!")
+		if cmd == "!part":
+			if nick in ircbot.BOTMASTERS:
+				try:
+					ircbot.part(args[0])
+					ircbot.msg(dest, "Parting %s" % args[0])
+				except: ircbot.msg(nick, "Error parting channel!")
 
-	if cmd == "!quit":
-		if nick in ircbot.BOTMASTERS:
-			ircbot.quit()
 
 if __name__ == '__main__':
 	ircbot.loop()

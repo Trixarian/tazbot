@@ -4,4 +4,4 @@
 # By Brenton Edgar Scott
 # Released under the CC0 License
 #######################################
-python -B ./modules/tazbot.py > tazbot.log 2>&1 & 
+python ./modules/tazbot.py > tazbot.log 2>&1 & 
