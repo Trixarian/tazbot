@@ -186,10 +186,14 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 						ircbot.act(dest, "%s" % reply[1:])
 					else:
 						ircbot.msg(dest, "%s: %s" % (nick, reply))
-				elif args[0] is not "": 
+				elif args[0] is not "":
 					msg = ircbot.NOHELP.replace("#botnick", ircbot.NICK)
 					msg = msg.replace("#nick", nick)
-					ircbot.msg(dest, msg)
+					if pvt_msg:
+						ircbot.msg(dest, msg)
+					else:
+						if ircbot.NICK.lower() in base_key.lower():
+							ircbot.msg(dest, msg)
 				else: pass
 			except: pass
 
