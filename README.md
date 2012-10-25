@@ -21,7 +21,7 @@ TazBot: topics
 Once connected use the !learn or !teach command with the trigger and responses seperated by a | to teach the bot responses. Spaces don't matter, but the length is limited to the standard IRC message line (around 500 characters). Multiple responses in the same line is also supported and will be picked at random based on the amount of responses saved for a trigger.
 Triggers are searched by closest matches so single words or short triggers work better, but words can be searched within longer triggers:  
 !teach This is a trigger | And this is a response!  
-!learn Hey There!|Hey to you too! ;)
+!learn Hey There!|Hey to you too! ;)  
 !teach Trigger | Response 1 | Response 2 | Oh My
 
 The !learn and !teach commands has some features like nickname substituon by using #nick in the response and responding with actions by prefixing the response with a + (plus sign):  
