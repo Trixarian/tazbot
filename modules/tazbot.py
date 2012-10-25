@@ -80,8 +80,11 @@ def dbwrite(key, value):
 # QBot's parser #
 #################
 def msg_parse(dest, nick, cmd, args, pvt_msg=0):
+	iscmd = 0
+	
 	if cmd == "!teach" or cmd == "!learn":
 		if nick in ircbot.BOTMASTERS:
+			iscmd = 1
 			try:
 				doesschool = ' '.join(args[0:])
 				key = doesschool.split("|")[0].strip()
@@ -101,6 +104,7 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 
 	if cmd == "!forget":
 		if nick in ircbot.BOTMASTERS:
+			iscmd = 1
 			key = ' '.join(args[0:]).strip()
 			if os.path.isfile("qdb.dat"):
 				try:
@@ -117,6 +121,7 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 		else: ircbot.msg(dest, "Sorry %s, only my masters can make me forget!" % nick)
 
 	if cmd == "!find":
+		iscmd = 1
 		key = ' '.join(args[0:]).strip()
 		if os.path.isfile("qdb.dat"):
 			rcount = 0
@@ -139,6 +144,7 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 		else: ircbot.msg(dest, "I don't know anything yet!")
 
 	if cmd == "!responses":
+		iscmd = 1
 		if os.path.isfile("qdb.dat"):
 			rcount = 0
 			file = open("qdb.dat")
@@ -153,11 +159,13 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 
 	if cmd == "!nick":
 		if nick in ircbot.BOTMASTERS:
+			iscmd = 1
 			try: ircbot.send("NICK %s" % args[0])
 			except: ircbot.msg(nick, "Error changing nickname to %s!" % args[0])
 
 	if cmd == "!join":
 		if nick in ircbot.BOTMASTERS:
+			iscmd = 1
 			try:
 				ircbot.join(args[0])
 				ircbot.msg(dest, "Joining %s" % args[0])
@@ -165,6 +173,7 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 
 	if cmd == "!part":
 		if nick in ircbot.BOTMASTERS:
+			iscmd = 1
 			try:
 				ircbot.part(args[0])
 				ircbot.msg(dest, "Parting %s" % args[0])
@@ -172,46 +181,49 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 
 	if cmd == "!quit":
 		if nick in ircbot.BOTMASTERS:
+			iscmd = 1
 			ircbot.quit()
 
-	base_key = ("%s %s" % (cmd, ' '.join(args[0:]))).strip()
-	if ircbot.NICK.lower() in base_key.lower() or pvt_msg:
-		if "help" in base_key.lower(): 
-			msg = ircbot.readconf("HELP").replace("#botnick", ircbot.NICK)
-			msg = msg.replace("#nick", nick)
-			ircbot.msg(dest, msg)
-		elif "topics" in base_key.lower():
-			if os.path.isfile("qdb.dat"):
-				topics = ""
-				file = open("qdb.dat")
-				for line in file.readlines():
-					key = line.split(":=:")[0]
-					if topics == "": topics = key
-					else: topics = topics+", "+key
-				file.close()
-				ircbot.msg(dest, "Topics: %s" % topics)
-			else: ircbot.msg(dest, "I don't know anything yet!")
-		else:
-			try:
-				reply = dbread(base_key)
-				if reply:
-					reply = reply.replace("#nick", nick)
-					reply = reply.replace("#botnick", ircbot.NICK)
-					reply = botunfilter(reply)
-					if reply[:1] == "+":
-						ircbot.act(dest, "%s" % reply[1:])
-					else:
-						ircbot.msg(dest, "%s: %s" % (nick, reply))
-				elif args[0] is not "":
-					msg = ircbot.readconf("NOHELP").replace("#botnick", ircbot.NICK)
-					msg = msg.replace("#nick", nick)
-					if pvt_msg:
-						ircbot.msg(dest, msg)
-					else:
-						if ircbot.NICK.lower() in cmd.lower():
+
+	if iscmd == 0:
+		base_key = ("%s %s" % (cmd, ' '.join(args[0:]))).strip()
+		if ircbot.NICK.lower() in base_key.lower() or pvt_msg:
+			if "help" in base_key.lower(): 
+				msg = ircbot.readconf("HELP").replace("#botnick", ircbot.NICK)
+				msg = msg.replace("#nick", nick)
+				ircbot.msg(dest, msg)
+			elif "topics" in base_key.lower():
+				if os.path.isfile("qdb.dat"):
+					topics = ""
+					file = open("qdb.dat")
+					for line in file.readlines():
+						key = line.split(":=:")[0]
+						if topics == "": topics = key
+						else: topics = topics+", "+key
+					file.close()
+					ircbot.msg(dest, "Topics: %s" % topics)
+				else: ircbot.msg(dest, "I don't know anything yet!")
+			else:
+				try:
+					reply = dbread(base_key)
+					if reply:
+						reply = reply.replace("#nick", nick)
+						reply = reply.replace("#botnick", ircbot.NICK)
+						reply = botunfilter(reply)
+						if reply[:1] == "+":
+							ircbot.act(dest, "%s" % reply[1:])
+						else:
+							ircbot.msg(dest, "%s: %s" % (nick, reply))
+					elif args[0] is not "":
+						msg = ircbot.readconf("NOHELP").replace("#botnick", ircbot.NICK)
+						msg = msg.replace("#nick", nick)
+						if pvt_msg:
 							ircbot.msg(dest, msg)
-				else: pass
-			except: pass
+						else:
+							if ircbot.NICK.lower() in cmd.lower():
+								ircbot.msg(dest, msg)
+					else: pass
+				except: pass
 
 
 if __name__ == '__main__':
