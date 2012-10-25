@@ -13,35 +13,34 @@ How do I use it?
 Just edit tazbot.conf to what you want and type ./tazbot to connect.
 
 `help` will display the basic usage of the bot:
-Tazbot: help
+`Tazbot: help`
 
 `topics` will bring up the topics the bot can answer questions about:
-TazBot: topics
+`TazBot: topics`
 
-Once connected use the !learn or !teach command with the trigger and responses seperated by a | to teach the bot responses. Spaces don't matter, but the length is limited to the standard IRC message line (around 500 characters). Multiple responses in the same line is also supported and will be picked at random based on the amount of responses saved for a trigger.
+Once connected use the `!learn` or `!teach` command with the trigger and responses seperated by a `|` to teach the bot responses. Spaces don't matter, but the length is limited to the standard IRC message line (around 500 characters). Multiple responses in the same line is also supported and will be picked at random based on the amount of responses saved for a trigger.
 Triggers are searched by closest matches so single words or short triggers work better, but words can be searched within longer triggers:  
-!teach This is a trigger | And this is a response!  
-!learn Hey There!|Hey to you too! ;)  
-!teach Trigger | Response 1 | Response 2 | Oh My
+`!teach This is a trigger | And this is a response!`  
+`!learn Hey There!|Hey to you too! ;)`  
+`!teach Trigger | Response 1 | Response 2 | Oh My`
 
-The !learn and !teach commands has some features like nickname substituon by using #nick in the response and responding with actions by prefixing the response with a + (plus sign):  
-!teach How do I have sex? | Stop asking lame questions #nick!  
-!learn Do something!|+kisses #nick
+The `!learn` and `!teach` commands has some features like nickname substituon by using #nick in the response and responding with actions by prefixing the response with a + (plus sign):  
+`!teach How do I have sex? | Stop asking lame questions #nick!`  
+`!learn Do something!|+kisses #nick`
 
-To see how many triggers match a phrase, use the !find command followed by the phrase:  
-!find Joe  
-!find Trixar_za is God
+To see how many triggers match a phrase, use the `!find` command followed by the phrase:  
+`!find Joe`  
+`!find Trixar_za is God`
 
-To make TazBot forget a learned response use, the !forget command followed by the phrase:  
-!forget Joe  
-!forget Trixar_za is dumb
+To make TazBot forget a learned response use, the `!forget` command followed by the phrase:  
+`!forget Joe`  
+`!forget Trixar_za is dumb`
 
-To see how many responses TazBot has learned so far you can use the !responses command:  
-!responses
+To see how many responses TazBot has learned so far you can use the `!responses` command:  
+`!responses`
 
 Otherwise there is other simple commands to control the bot:  
-!join #chan - Makes the bot join #chan *  
-!part #chan - Makes the bot part #chan *  
-!quit - Makes the bot quit
-
-\* Only work in private with the bot
+`!nick newnick` - Makes the bot change it's nickname to newnick  
+`!join #chan` - Makes the bot join #chan  
+`!part #chan` - Makes the bot part #chan  
+`!quit` - Makes the bot quit

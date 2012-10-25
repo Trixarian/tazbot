@@ -47,8 +47,8 @@ def part(target):
 	send("PART %s" % target)
 
 def quit():
-	global running, sock, QUITMSG
-	send("QUIT :%s" % QUITMSG)
+	global running, sock
+	send("QUIT :%s" % readconf("QUITMSG"))
 	running = False
 	sock.close()
 	sys.exit(0)
@@ -85,7 +85,7 @@ def parse(msg):
 	if msg[1] == "JOIN":
 		global ONJOIN
 		nick = getnick(msg[0])
-		msg = ONJOIN.replace("#botnick", NICK)
+		msg = readconf("ONJOIN").replace("#botnick", NICK)
 		msg = msg.replace("#nick", nick)
 		notice(nick, msg)
 
@@ -104,7 +104,7 @@ def parse(msg):
 			main.msg_parse(nick, nick, cmd, args, 1)
 
 def loop():
-	global sock, running, NICK, CHANNELS, BOTMASTERS, ONJOIN, HELP, NOHELP, QUITMSG
+	global sock, running, NICK, CHANNELS, BOTMASTERS
 	running = True
 	buffer = ""
 	BOTMASTERS = readconf("BOTMASTERS")
@@ -113,11 +113,7 @@ def loop():
 	NICK = readconf("NICK")
 	IDENT = readconf("IDENT")
 	REALNAME = readconf("REALNAME")
-	QUITMSG = readconf("QUITMSG")
 	CHANNELS = str(readconf("CHANNELS")).split()
-	ONJOIN = readconf("ONJOIN")
-	HELP = readconf("HELP")
-	NOHELP = readconf("NOHELP")
 
 	## Connect to IRC ##
 	sock=socket.socket()

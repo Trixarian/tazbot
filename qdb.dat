@@ -30,6 +30,6 @@ OpenOffice:=:OpenOffice.org/LibreOffice is a complete Office suite that support 
 LibreOffice:=:OpenOffice.org/LibreOffice is a complete Office suite that support MS Office documents. There are several ways to get a copy and most of them are discussed @ http://forum.slitaz.org/topic/help-me-please-office-to-slitaz
 Office Alternative:=:To get an office suite on SliTaz either install LibreOffice/OpenOffice (about 180MB) or install Abiword for documents and Gnumeric for Spreadsheets for a 20MB solution to the problem. Optionally, you can add pptview from http://trixarian.net/SliTaz to get a Powerpoint viewer but it requires WINE to work. See: OpenOffice
 vnc:=:http://forum.slitaz.org/topic/problems-with-tightvnc#post-9540
-windows 8:=:Really? You want help with something that hasn't been released yet and copies Unity? Just install Ubuntu and you'll have something that looks and feels just like it!
 frugal install:=:For help with frugal install, please read: http://doc.slitaz.org/en:guides:frugal which shows several different approaches to do a frugal install.
 tazusb:=:For help on TazUSB usage, please visit: http://hg.slitaz.org/tazusb/raw-file/tip/doc/tazusb.en.html which offers manual and guide to using TazUSB.
+Set the time:=:Getting the correct time in 3 easy steps: 1) Go to Application-->Preferences-->Time Zone configuration and select the timezone closest to yours. 2) Log out until you get to log in screen and log back in. 3) Now run the following as root from Sakura: busybox ntpd -dnqp pool.ntp.org && hwclock -w -u See: Become Root
