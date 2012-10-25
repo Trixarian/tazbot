@@ -192,7 +192,7 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 					if pvt_msg:
 						ircbot.msg(dest, msg)
 					else:
-						if ircbot.NICK.lower() in base_key.lower():
+						if ircbot.NICK.lower() in cmd.lower():
 							ircbot.msg(dest, msg)
 				else: pass
 			except: pass
