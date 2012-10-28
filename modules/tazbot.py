@@ -84,7 +84,7 @@ def dbwrite(key, value):
 def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 
 	if cmd[:1] == "!":
-		if cmd == "!teach" or cmd == "!learn":
+		if cmd == "!teach":
 			if nick in ircbot.readconf("BOTMASTERS"):
 				try:
 					data = ' '.join(args[0:])
@@ -202,6 +202,7 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 				try:
 					reply = dbread(base_key).split("\n")
 					if reply:
+						linecount = 1
 						if len(reply) > int(ircbot.readconf("LINES")): dest = nick
 						for line in reply:
 							line = line.replace("#nick", nick)
@@ -211,10 +212,11 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 								ircbot.act(dest, "%s" % line[1:])
 							else:
 								prefix_nick = bool(ircbot.readconf("PREFIX"))
-								if prefix_nick and dest is not nick:
+								if prefix_nick and dest is not nick and linecount == 1:
 									ircbot.msg(dest, "%s: %s" % (nick, line))
 								else:
 									ircbot.msg(dest, line)
+							linecount = linecount+1
 					elif args[0] is not "":
 						msg = ircbot.readconf("NOHELP").replace("#botnick", ircbot.BOTNICK)
 						msg = msg.replace("#nick", nick)
