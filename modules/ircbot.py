@@ -104,10 +104,9 @@ def parse(msg):
 			main.msg_parse(nick, nick, cmd, args, 1)
 
 def loop():
-	global sock, running, BOTNICK, CHANNELS, BOTMASTERS
+	global sock, running, BOTNICK, CHANNELS
 	running = True
 	buffer = ""
-	BOTMASTERS = readconf("BOTMASTERS")
 	SERVER = readconf("SERVER")
 	PORT = int(readconf("PORT"))
 	BOTNICK = readconf("NICK")

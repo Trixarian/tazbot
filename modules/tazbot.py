@@ -85,7 +85,7 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 
 	if cmd[:1] == "!":
 		if cmd == "!teach" or cmd == "!learn":
-			if nick in ircbot.BOTMASTERS:
+			if nick in ircbot.readconf("BOTMASTERS"):
 				try:
 					data = ' '.join(args[0:])
 					key = data.split("|")[0].strip()
@@ -104,7 +104,7 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 			else: ircbot.msg(dest, "Sorry %s, only my masters can teach me!" % nick)
 
 		if cmd == "!forget":
-			if nick in ircbot.BOTMASTERS:
+			if nick in ircbot.readconf("BOTMASTERS"):
 				key = ' '.join(args[0:]).strip()
 				if os.path.isfile("qdb.dat"):
 					try:
@@ -156,28 +156,28 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 			else: ircbot.msg(dest, "I don't know anything yet!")
 
 		if cmd == "!nick":
-			if nick in ircbot.BOTMASTERS:
+			if nick in ircbot.readconf("BOTMASTERS"):
 				try: 
 					ircbot.send("NICK %s" % args[0])
 					ircbot.BOTNICK = args[0]
 				except: ircbot.msg(nick, "Error changing nickname to %s!" % args[0])
 
 		if cmd == "!join":
-			if nick in ircbot.BOTMASTERS:
+			if nick in ircbot.readconf("BOTMASTERS"):
 				try:
 					ircbot.join(args[0])
 					ircbot.msg(dest, "Joining %s" % args[0])
 				except: ircbot.msg(nick, "Error joining %s!" % args[0])
 
 		if cmd == "!part":
-			if nick in ircbot.BOTMASTERS:
+			if nick in ircbot.readconf("BOTMASTERS"):
 				try:
 					ircbot.part(args[0])
 					ircbot.msg(dest, "Parting %s" % args[0])
 				except: ircbot.msg(nick, "Error parting %s!" % args[0])
 
 		if cmd == "!quit":
-			if nick in ircbot.BOTMASTERS:
+			if nick in ircbot.readconf("BOTMASTERS"):
 				ircbot.quit()
 
 	else:
