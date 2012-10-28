@@ -85,7 +85,7 @@ def parse(msg):
 	if msg[1] == "JOIN":
 		global ONJOIN
 		nick = getnick(msg[0])
-		msg = readconf("ONJOIN").replace("#botnick", NICK)
+		msg = readconf("ONJOIN").replace("#botnick", BOTNICK)
 		msg = msg.replace("#nick", nick)
 		notice(nick, msg)
 
@@ -104,13 +104,13 @@ def parse(msg):
 			main.msg_parse(nick, nick, cmd, args, 1)
 
 def loop():
-	global sock, running, NICK, CHANNELS, BOTMASTERS
+	global sock, running, BOTNICK, CHANNELS, BOTMASTERS
 	running = True
 	buffer = ""
 	BOTMASTERS = readconf("BOTMASTERS")
 	SERVER = readconf("SERVER")
 	PORT = int(readconf("PORT"))
-	NICK = readconf("NICK")
+	BOTNICK = readconf("NICK")
 	IDENT = readconf("IDENT")
 	REALNAME = readconf("REALNAME")
 	CHANNELS = str(readconf("CHANNELS")).split()
@@ -118,7 +118,7 @@ def loop():
 	## Connect to IRC ##
 	sock=socket.socket()
 	sock.connect((SERVER, PORT))
-	send("NICK %s" % NICK)
+	send("NICK %s" % BOTNICK)
 	send("USER %s %s 0 :%s" % (IDENT, SERVER, REALNAME))
 
 	## Checking the buffer for new data from the socket ##

@@ -18,11 +18,11 @@ Just edit tazbot.conf to what you want and type ./tazbot to connect.
 `topics` will bring up the topics the bot can answer questions about:
 `TazBot: topics`
 
-Once connected use the `!learn` or `!teach` command with the trigger and responses seperated by a `|` to teach the bot responses. Spaces don't matter, but the length is limited to the standard IRC message line (around 500 characters). Multiple responses in the same line is also supported and will be picked at random based on the amount of responses saved for a trigger.
+Once connected use the `!learn` or `!teach` command with the trigger and responses seperated by a `|` to teach the bot responses. Spaces don't matter, but the length is limited to the standard IRC message line (around 500 characters). Multiple lined responses is also supported and will be each be shown on their own line. If there is more than the set amount of lines (set in the conf file), the responses will be forwarded to the user.
 Triggers are searched by closest matches so single words or short triggers work better, but words can be searched within longer triggers:  
 `!teach This is a trigger | And this is a response!`  
 `!learn Hey There!|Hey to you too! ;)`  
-`!teach Trigger | Response 1 | Response 2 | Oh My`
+`!teach Trigger | Line 1 | Line 2 | Oh My`
 
 The `!learn` and `!teach` commands has some features like nickname substituon by using #nick in the response and responding with actions by prefixing the response with a + (plus sign):  
 `!teach How do I have sex? | Stop asking lame questions #nick!`  
