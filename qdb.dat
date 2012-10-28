@@ -14,7 +14,7 @@ Pastebin:=:http://paste.slitaz.org/
 Cookutils:=:http://hg.slitaz.org/cookutils/raw-file/tip/doc/cookutils.en.html
 SliTaz flavors:=:http://mirror.slitaz.org/iso/stable/flavors/
 SliTaz ARM:=:http://people.slitaz.org/~pankso/packages/ http://cook.slitaz.org/cross/arm/ http://hg.slitaz.org/slitaz-arm/
-Source code:=:http://hg.slitaz.org/
+Source code:=:http://hg.slitaz.org/:=:https://github.com/Trixarian/tazbot
 Wifi:=:For help with Wifi, please read: http://doc.slitaz.org/en:guides:wifi-easy first. If that doesn't work then read: http://doc.slitaz.org/en:guides:wifi-hard
 3G:=:Read more about how to get online using 3G/UTMS/HSDPA/GPRS/EDGE Modems using Sakis3G at http://forum.slitaz.org/topic/read-this-if-you-use-a-3g-modem-to-connect
 Qemu networking:=:Go into SliTaz Panel under network, in ethernet set computers host ip as this vm's static ip and then gateway as routers ip

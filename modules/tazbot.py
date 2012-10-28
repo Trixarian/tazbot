@@ -187,7 +187,7 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 				msg = ircbot.readconf("HELP").replace("#botnick", ircbot.BOTNICK)
 				msg = msg.replace("#nick", nick)
 				ircbot.msg(dest, msg)
-			elif "topics" in base_key.lower():
+			elif "topic" in base_key.lower():
 				if os.path.isfile("qdb.dat"):
 					topics = ""
 					file = open("qdb.dat")
@@ -198,6 +198,10 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 					file.close()
 					ircbot.msg(dest, "Topics: %s" % topics)
 				else: ircbot.msg(dest, "I don't know anything yet!")
+			elif "version" in base_key.lower(): 
+				ircbot.msg(dest, "TazBot 1.0 by Trixar_za: https://github.com/Trixarian/tazbot")
+			elif "overlord" in base_key.lower(): 
+				ircbot.msg(dest, "BOW TO ME FOR I AM YOUR ROBOT OVERLORD!")
 			else:
 				try:
 					reply = dbread(base_key).split("\n")
