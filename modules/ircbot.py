@@ -26,9 +26,17 @@ def readconf(target):
 ####################
 # IRCBot Framework #
 ####################
+## Splits the messages into chunks of 510 characters ##
+def word_wrap(s):
+	slices=[]
+	for i in range(0,len(s),510):
+		slices.append(s[i:i+510])
+	return slices
+
 ## Sends to the IRC socket with the cartrige return and newline added ##
 def send(msg):
-	sock.send("%s\r\n" % msg)
+	for line in word_wrap(msg):
+		sock.send("%s\r\n" % line)
 
 ## Wrappers to make using this bot easier ###
 def msg(target, msg):
