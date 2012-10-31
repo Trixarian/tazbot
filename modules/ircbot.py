@@ -91,7 +91,6 @@ def parse(msg):
 			else: join(x)
 
 	if msg[1] == "JOIN":
-		global ONJOIN
 		nick = getnick(msg[0])
 		msg = readconf("ONJOIN").replace("#botnick", BOTNICK)
 		msg = msg.replace("#nick", nick)

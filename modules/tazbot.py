@@ -188,20 +188,24 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 				msg = msg.replace("#nick", nick)
 				ircbot.msg(dest, msg)
 			elif "topic" in base_key.lower():
-				if os.path.isfile("qdb.dat"):
-					topics = ""
-					file = open("qdb.dat")
-					for line in file.readlines():
-						key = line.split(":=:")[0]
-						if topics == "": topics = key
-						else: topics = topics+", "+key
-					file.close()
-					ircbot.msg(dest, "Topics: %s" % topics)
-				else: ircbot.msg(dest, "I don't know anything yet!")
+				if "about" not in base_key.lower() or "for" not in base_key.lower():
+					if os.path.isfile("qdb.dat"):
+						topics = ""
+						file = open("qdb.dat")
+						for line in file.readlines():
+							key = line.split(":=:")[0]
+							if topics == "": topics = key
+							else: topics = topics+", "+key
+						file.close()
+						ircbot.msg(dest, "Topics: %s" % topics)
+					else: ircbot.msg(dest, "I don't know anything yet!")
 			elif "version" in base_key.lower(): 
 				ircbot.msg(dest, "TazBot 1.0 by Trixar_za: https://github.com/Trixarian/tazbot")
-			elif "overlord" in base_key.lower(): 
+			# Couple of Easter eggs ;)
+			elif "robot overlord" in base_key.lower(): 
 				ircbot.msg(dest, "BOW TO ME FOR I AM YOUR ROBOT OVERLORD!")
+			elif "the girls" in base_key.lower(): 
+				ircbot.msg(dest, "All I know is that pankso owns all the girls...")
 			else:
 				try:
 					reply = dbread(base_key).split("\n")
