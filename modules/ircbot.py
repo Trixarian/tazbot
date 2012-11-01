@@ -115,7 +115,7 @@ def parse(msg):
 		except:
 			cmd = ""
 			args = ""
-		if "VERSION" in cmd:
+		if "VERSION" in cmd and chan[:1] != "#":
 			notice(nick, "\001VERSION TazBot 1.0 by Trixar_za: https://github.com/Trixarian/tazbot\001")
 		elif chan[:1] == "#":
 			main.msg_parse(chan, nick, cmd, args)
