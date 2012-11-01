@@ -58,9 +58,6 @@ def act(target, msg):
 	for line in word_wrap(msg):
 		send("PRIVMSG %s :\001ACTION %s\001" % (target, line.strip()))
 
-def ctcp(target, msg):
-	pass
-
 def join(target):
 	send("JOIN %s" % target)
 
@@ -118,7 +115,9 @@ def parse(msg):
 		except:
 			cmd = ""
 			args = ""
-		if chan[:1] == "#":
+		if "VERSION" in cmd:
+			notice(nick, "\001VERSION TazBot 1.0 by Trixar_za: https://github.com/Trixarian/tazbot\001")
+		elif chan[:1] == "#":
 			main.msg_parse(chan, nick, cmd, args)
 		else:
 			main.msg_parse(nick, nick, cmd, args, 1)
