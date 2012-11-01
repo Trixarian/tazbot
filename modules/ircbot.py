@@ -26,27 +26,40 @@ def readconf(target):
 ####################
 # IRCBot Framework #
 ####################
-## Splits the messages into chunks of 510 characters ##
-def word_wrap(s):
-	slices=[]
-	for i in range(0,len(s),510):
-		slices.append(s[i:i+510])
-	return slices
+## Splits the messages into chunks of 450 characters split by words ##
+def word_wrap(msg):
+	lines = []
+	line = ""
+	count = 0
+	for word in msg.split():
+		line = line+word+" "
+		count = count+1
+		if (len(line)+len(word)) > 450:
+			lines.append(line)
+			line = ""
+		elif count == len(msg.split()) and line is not "":
+			lines.append(line.strip())
+	return lines
 
 ## Sends to the IRC socket with the cartrige return and newline added ##
 def send(msg):
-	for line in word_wrap(msg):
-		sock.send("%s\r\n" % line)
+	sock.send("%s\r\n" % msg)
 
 ## Wrappers to make using this bot easier ###
 def msg(target, msg):
-	send("PRIVMSG %s :%s" % (target, msg)) 
+	for line in word_wrap(msg):
+		send("PRIVMSG %s :%s" % (target, line.strip())) 
 
 def notice(target, msg):
-	send("NOTICE %s :%s" % (target, msg))
+	for line in word_wrap(msg):
+		send("NOTICE %s :%s" % (target, line.strip()))
 
 def act(target, msg):
-	send("PRIVMSG %s :\001ACTION %s\001" % (target, msg))
+	for line in word_wrap(msg):
+		send("PRIVMSG %s :\001ACTION %s\001" % (target, line.strip()))
+
+def ctcp(target, msg):
+	pass
 
 def join(target):
 	send("JOIN %s" % target)

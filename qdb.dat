@@ -33,3 +33,4 @@ vnc:=:http://forum.slitaz.org/topic/problems-with-tightvnc#post-9540
 frugal install:=:For help with frugal install, please read: http://doc.slitaz.org/en:guides:frugal which shows several different approaches to do a frugal install.
 tazusb:=:For help on TazUSB usage, please visit: http://hg.slitaz.org/tazusb/raw-file/tip/doc/tazusb.en.html which offers manual and guide to using TazUSB.
 Set the time:=:Getting the correct time in 3 easy steps: 1) Go to Application-->Preferences-->Time Zone configuration and select the timezone closest to yours. 2) Log out until you get to log in screen and log back in. 3) Now run the following as root from Sakura: busybox ntpd -dnqp pool.ntp.org && hwclock -w -u See: Become Root
+Windows 8:=:+slaps #nick:=:Use a real operating system like SliTaz instead of that bloat X(
