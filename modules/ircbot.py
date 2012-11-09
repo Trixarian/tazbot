@@ -99,6 +99,11 @@ def parse(msg):
 		for x in CHANNELS:
 			if x is "": pass
 			else: join(x)
+		if MODES != "":
+			send("MODE %s %s" % (BOTNICK, MODES))
+		if PERFORM != "":
+			send("%s" % PERFORM)
+			
 
 	if msg[1] == "JOIN":
 		nick = getnick(msg[0])
@@ -123,7 +128,7 @@ def parse(msg):
 			main.msg_parse(nick, nick, cmd, args, 1)
 
 def loop():
-	global sock, running, BOTNICK, CHANNELS
+	global sock, running, BOTNICK, CHANNELS, MODES, PERFORM
 	running = True
 	buffer = ""
 	SERVER = readconf("SERVER")
@@ -132,6 +137,8 @@ def loop():
 	IDENT = readconf("IDENT")
 	REALNAME = readconf("REALNAME")
 	CHANNELS = str(readconf("CHANNELS")).split()
+	MODES = readconf("MODES")
+	PERFORM = readconf("PERFORM")
 
 	## Connect to IRC ##
 	sock=socket.socket()

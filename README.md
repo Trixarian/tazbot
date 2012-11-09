@@ -12,9 +12,6 @@ How do I use it?
 ----------------
 Just edit tazbot.conf to what you want and type ./tazbot to connect.
 
-`version` will display the credits and this site:  
-`Tazbot: version`
-
 `help` will display the basic usage of the bot:  
 `Tazbot: help`
 
@@ -26,14 +23,19 @@ Triggers are searched by closest matches so single words or short triggers work 
 `!teach This is a trigger | And this is a response!`  
 `!teach Trigger | Line 1 | Line 2 | Oh My`
 
-The `!teach` commands has some features like user nickname substituon by using #nick in the response and responding with actions by prefixing the response with a + (plus sign). You can also use #botnick to represent the bot's nick in responses:  
+The `!teach` command has some features like user nickname substituon by using #nick in the response and responding with actions by prefixing the response with a + (plus sign). You can also use #botnick to represent the bot's nick in responses:  
 `!teach How do I have sex? | Stop asking lame questions #nick!`  
 `!teach Awesomeness | Yes, #botnick is awesome!`  
 `!teach Do something!|+kisses #nick`
 
+The `!teach` command, when using an existing trigger with a single response, will overwrite the current trigger/response pair with the new pair. This was added for convience. Use the `!add` command to add single responses to existing triggers or use `!teach` with more than one response.
+
 To see how many triggers match a phrase, use the `!find` command followed by the phrase:  
 `!find Joe`  
 `!find Trixar_za is God`
+
+You use the `!add` command to add a single response to an existing trigger:
+`!add Joe | He's awesome`
 
 To make TazBot forget a learned response use, the `!forget` command followed by the phrase:  
 `!forget Joe`  
