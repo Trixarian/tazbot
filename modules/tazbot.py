@@ -107,12 +107,13 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 		if cmd == "!add":
 			if nick in ircbot.readconf("BOTMASTERS"):
 				try:
+					data = ' '.join(args[0:])
 					key = data.split("|")[0].strip()
 					value = data.split("|")[1].strip()
 					if key != "" and value != "":
 						dbwrite(key[0:], botfilter(value[0:]), 1)
 						ircbot.msg(dest, "Added \"%s\" to \"%s\"" % (value, key))
-				except: ircbot.msg(dest, "Sorry, I couldn't add that to %s!" % key)
+				except: ircbot.msg(dest, "Sorry, I couldn't add that!")
 			else: ircbot.msg(dest, "Sorry %s, only my masters can add to my responses!" % nick)
 
 		if cmd == "!forget":
