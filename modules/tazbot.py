@@ -41,13 +41,9 @@ def dbread(key):
 		for line in file.readlines():
 			reps = int(len(line.split(":=:"))-1)
 			data = line.split(":=:")[0]
-			data2 = r'\b%s[a-z]{,4}\b' % data.replace("+","\+")
-			key2 = r'\b%s[a-z]{,4}\b' % key.replace("+","\+")
-			if re.search(key2, data, re.IGNORECASE) or re.search(data2, key, re.IGNORECASE):
-				if key is "":
-					value = None
-					break
-				else:
+			dlen = r'\b.{3,}\b'
+			if re.search(dlen, key, re.IGNORECASE):
+				if key.lower() in data.lower() or data.lower() in key.lower():
 					if reps > 1:
 						array = line.split(":=:")
 						count = 1
@@ -58,6 +54,9 @@ def dbread(key):
 					else:
 						value = str(line.split(":=:")[1].strip())
 					break
+			else:
+				value = None
+				break
 		file.close()
 	return value
 
@@ -72,11 +71,13 @@ def dbwrite(key, value, add=0):
 			data = line.split(":=:")[0]
 			data2 = r'\b%s\b' % data.replace("+","\+")
 			key2 = r'\b%s\b' % key.replace("+","\+")
-			if re.search(key2, data, re.IGNORECASE) or re.search(data2, key, re.IGNORECASE):
-				if add == 1: print str(line.strip())+":=:"+str(value)
-				else: print str(key.strip())+":=:"+str(value)
-			else:
-				print line.strip()
+			dlen = r'\b[a-z]{3,}\b'
+			if re.search(dlen, data, re.IGNORECASE) or re.search(dlen, key, re.IGNORECASE):
+				if re.search(key2, data, re.IGNORECASE) or re.search(data2, key, re.IGNORECASE):
+					if add == 1: print str(line.strip())+":=:"+str(value)
+					else: print str(key.strip())+":=:"+str(value)
+				else: print line.strip()
+			else: print line.strip()
 
 
 ###################
@@ -183,7 +184,7 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 	else:
 		base_key = ("%s %s" % (cmd, ' '.join(args[0:]))).strip()
 		if ircbot.BOTNICK.lower() in base_key.lower() or pvt_msg:
-			if "help" in base_key.lower(): 
+			if "help" in base_key.lower() or ircbot.BOTNICK.lower() is base_key.lower(): 
 				msg = ircbot.readconf("HELP").replace("#botnick", ircbot.BOTNICK)
 				msg = msg.replace("#nick", nick)
 				ircbot.msg(dest, msg)
@@ -200,10 +201,16 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 						ircbot.msg(dest, "Topics: %s" % topics)
 					else: ircbot.msg(dest, "I don't know anything yet!")
 			# Couple of Easter eggs ;)
+			elif "42" in base_key.lower(): 
+				ircbot.msg(dest, "%s: 42 is the Answer to the Ultimate Question about Life, the Universe and Everything!" % nick)
+				ircbot.act(dest, "hides %s's brain from the mice!" % nick)
 			elif "overlord" in base_key.lower(): 
 				ircbot.msg(dest, "BOW TO ME FOR I AM YOUR ROBOT OVERLORD!")
 			elif "girls" in base_key.lower(): 
 				ircbot.msg(dest, "All I know is that pankso owns all the girls...")
+			elif "windows 8" in base_key.lower():
+				ircbot.act(dest, "slaps %s" % nick)
+				ircbot.msg(dest, "Don't use that bloat! Use a Real OS like SliTaz instead! :D")
 			else:
 				try:
 					reply = dbread(base_key).split("\n")

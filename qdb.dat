@@ -4,14 +4,13 @@ Install Packages:=:Either use SliTaz Panel's package manager or the cli command 
 Update SliTaz:=:Try using tazpkg recharge to update the package list or tazpkg up to upgrade the packages.
 Become Root:=:To become root in SliTaz's command line, first type su and press enter/return, then type in your root password (default password is root) when asked. Now you can use tools that require root like tazpkg.
 LiveUSB:=:Most LiveUSB creation software (like Unetbootin) will have trouble using the default 4-in-1 LiveCD iso, so please use the Core iso instead. See: SliTaz flavors
-Low Ram Install:=:SliTaz's LiveCD needs atleast 160MB of RAM to boot into the graphical enviroment. For systems with 80MB of RAM or more, it's recommended to use the loram flavour while systems with atleast 32MB of RAM should use the loram-cdrom flavor. See: SliTaz flavors, Install SliTaz
+Low Ram:=:SliTaz's LiveCD needs atleast 160MB of RAM to boot into the graphical enviroment. For systems with 80MB of RAM or more, it's recommended to use the loram flavour while systems with atleast 32MB of RAM should use the loram-cdrom flavor. See: SliTaz flavors, Install SliTaz
 Compile Programs:=:First install the slitaz-toolchain package. Then read the software's README or INSTALL file and install the required packages and their *-dev packages from the repository. Then use the normal ./configure, make and make install route. Remember to use --prefix=/usr with ./configure to get best results.
 Convert Packages:=:SliTaz has the ability to convert packages from other distros. With simple packages, it's just a matter of typing tazpkg convert package.deb to create a working SliTaz package. More complex packages may require you to convert and install other required packages before the converted package will work. You do not need to be root for this to work.
 Base distro:=:SliTaz is not based on any other Distribution like Debian, Slackware or Fedora and their derivatives. SliTaz was created from scratch using the Linux Kernel, BusyBox, GTK and several LXDE components. Anything unique was coded from scratch exclusively for SliTaz.
 Screen resolution:=:You can change the screen's resolution @ Applications---> Preferences---> Monitor Settings or by using the command lxrandr in Sakura/Xterm. To work correctly, it will need you to have the proper video driver setup for your video card.
 Video driver:=:To setup the proper video driver first make sure your online and have su to root (use the command su in Sakura/Xterm, enter your root password (default is root)) and type tazx to get a box to pop up. Select Install/Configure Xorg Driver, wait for it to download the list and select the driver closest to your video card. The next step is to restart your machine and may also require the removal of xorg-xf86-video-vesa to work.
 Pastebin:=:http://paste.slitaz.org/
-Cookutils:=:http://hg.slitaz.org/cookutils/raw-file/tip/doc/cookutils.en.html
 SliTaz flavors:=:http://mirror.slitaz.org/iso/stable/flavors/
 SliTaz ARM:=:http://people.slitaz.org/~pankso/packages/ http://cook.slitaz.org/cross/arm/ http://hg.slitaz.org/slitaz-arm/
 Source code:=:http://hg.slitaz.org/:=:https://github.com/Trixarian/tazbot
@@ -32,7 +31,8 @@ Office Alternative:=:To get an office suite on SliTaz either install LibreOffice
 vnc:=:http://forum.slitaz.org/topic/problems-with-tightvnc#post-9540
 frugal install:=:For help with frugal install, please read: http://doc.slitaz.org/en:guides:frugal which shows several different approaches to do a frugal install.
 tazusb:=:For help on TazUSB usage, please visit: http://hg.slitaz.org/tazusb/raw-file/tip/doc/tazusb.en.html which offers manual and guide to using TazUSB.
-Set the time:=:Getting the correct time in 3 easy steps: 1) Go to Application-->Preferences-->Time Zone configuration and select the timezone closest to yours. 2) Log out until you get to log in screen and log back in. 3) Now run the following as root from Sakura: busybox ntpd -dnqp pool.ntp.org && hwclock -w -u See: Become Root
-Windows 8:=:+slaps #nick:=:Use a real operating system like SliTaz instead of that bloat X(
+time:=:Getting the correct time in 3 easy steps: 1) Go to Application-->Preferences-->Time Zone configuration and select the timezone closest to yours. 2) Log out until you get to log in screen and log back in. 3) Now run the following as root from Sakura: busybox ntpd -dnqp pool.ntp.org && hwclock -w -u See: Become Root
 Mailing list:=:http://www.slitaz.org/en/mailing-list.php
-Turn off the screensaver:=:Run xset s off; xset -dpms & from your terminal, add it to auto-started applications and the time-out blank screen will disappear
+screensaver:=:Run xset s off; xset -dpms & from your terminal, add it to auto-started applications and the time-out blank screen will disappear:=:To get screensavers, go to http://people.slitaz.org/~mojo/stuff and download (and install) the xscreensaver packages.
+Drivers:=:Do you mean video drivers? Ask me then.
+mp3:=:#nick: Deadbeef is the best Music player you'll find in SliTaz. Get it by installing the deadbeef and deadbeef-plugins packages.
