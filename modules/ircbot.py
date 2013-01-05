@@ -1,5 +1,5 @@
 #######################################
-# TazBot v1.0
+# TazBot v2.0
 # By Brenton Edgar Scott
 # Released under the CC0 License
 #######################################

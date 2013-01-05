@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #######################################
-# Tazbot v1.0
+# Tazbot v2.0
 # By Brenton Edgar Scott
 # Released under the CC0 License
 #######################################
@@ -41,7 +41,7 @@ def dbread(key):
 		for line in file.readlines():
 			reps = int(len(line.split(":=:"))-1)
 			data = line.split(":=:")[0]
-			dlen = r'\b.{3,}\b'
+			dlen = r'\b.{2,}\b'
 			if re.search(dlen, key, re.IGNORECASE):
 				if key.lower() in data.lower() or data.lower() in key.lower():
 					if reps > 1:
@@ -69,11 +69,9 @@ def dbwrite(key, value, add=0):
 	else:
 		for line in fileinput.input("qdb.dat",inplace=1):
 			data = line.split(":=:")[0]
-			data2 = r'\b%s\b' % data.replace("+","\+")
-			key2 = r'\b%s\b' % key.replace("+","\+")
-			dlen = r'\b[a-z]{3,}\b'
-			if re.search(dlen, data, re.IGNORECASE) or re.search(dlen, key, re.IGNORECASE):
-				if re.search(key2, data, re.IGNORECASE) or re.search(data2, key, re.IGNORECASE):
+			dlen = r'\b.{2,}\b'
+			if re.search(dlen, key, re.IGNORECASE):			
+				if key.lower() in data.lower() or data.lower() in key.lower():
 					if add == 1: print str(line.strip())+":=:"+str(value)
 					else: print str(key.strip())+":=:"+str(value)
 				else: print line.strip()
@@ -86,48 +84,52 @@ def dbwrite(key, value, add=0):
 def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 
 	if cmd[:1] == "!":
-		if cmd == "!teach":
-			if nick in ircbot.readconf("BOTMASTERS"):
+		if cmd == "!teach" or cmd == "!learn":
+			if nick in ircbot.readconf("ADMIN"):
 				try:
 					data = ' '.join(args[0:])
 					key = data.split("|")[0].strip()
 					rnum = int(len(data.split("|"))-1)
-					if rnum > 1: 
+					if rnum >= 1: 
 						array = data.split("|")
-						rcount = 1
 						for value in array:
-							if rcount == 1:	rcount = rcount+1
-							else: dbwrite(key[0:], botfilter(value[0:].strip()), 1)
-					else:
-						value = data.split("|")[1].strip()
-						dbwrite(key[0:], botfilter(value[0:]))
-					ircbot.msg(dest, "New response learned for \"%s\"" % key)
+							dbwrite(key[0:], botfilter(value[0:].strip()), 1)
+					ircbot.msg(dest, "New response(s) learned for \"%s\"" % key)
 				except: ircbot.msg(dest, "Sorry, I couldn't learn that!")
 			else: ircbot.msg(dest, "Sorry %s, only my masters can teach me!" % nick)
 			
-		if cmd == "!add":
-			if nick in ircbot.readconf("BOTMASTERS"):
+		if cmd == "!reteach" or cmd == "!relearn":
+			if nick in ircbot.readconf("ADMIN"):
 				try:
 					data = ' '.join(args[0:])
 					key = data.split("|")[0].strip()
-					value = data.split("|")[1].strip()
-					if key != "" and value != "":
-						dbwrite(key[0:], botfilter(value[0:]), 1)
-						ircbot.msg(dest, "Added \"%s\" to \"%s\"" % (value, key))
-				except: ircbot.msg(dest, "Sorry, I couldn't add that!")
-			else: ircbot.msg(dest, "Sorry %s, only my masters can add to my responses!" % nick)
+					rnum = int(len(data.split("|"))-1)
+					if rnum >= 1: 
+						array = data.split("|")
+						rcount = 1
+						for value in array:
+							if rcount == 1:
+								dbwrite(key[0:], botfilter(value[0:]))
+								rcount = rcount+1
+							else:
+								dbwrite(key[0:], botfilter(value[0:].strip()), 1)
+								rcount = rcount+1
+					if rcount > 2: ircbot.msg(dest, "Responses retaught for \"%s\"" % key)
+					else: ircbot.msg(dest, "Response retaught for \"%s\"" % key)
+				except: ircbot.msg(dest, "Sorry, I couldn't relearn that!")
+			else: ircbot.msg(dest, "Sorry %s, only my masters can reteach me!" % nick)
 
 		if cmd == "!forget":
-			if nick in ircbot.readconf("BOTMASTERS"):
+			if nick in ircbot.readconf("ADMIN"):
 				key = ' '.join(args[0:]).strip()
 				if os.path.isfile("qdb.dat"):
 					try:
 						for line in fileinput.input("qdb.dat", inplace =1):
 							data = line.split(":=:")[0]
-							data2 = r'\b%s\b' % data.replace("+","\+")
-							key2 = r'\b%s\b' % key.replace("+","\+")
-							if re.search(key2, data, re.IGNORECASE) or re.search(data2, key, re.IGNORECASE):
-								pass
+							dlen = r'\b.{2,}\b'
+							if re.search(dlen, key, re.IGNORECASE):			
+								if key.lower() in data.lower() or data.lower() in key.lower():
+									pass
 							else: print line.strip()
 						ircbot.msg(dest, "I've forgotten \"%s\"" % key)
 					except: ircbot.msg(dest, "Sorry, I couldn't forget that!")
@@ -142,14 +144,14 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 				file = open("qdb.dat")
 				for line in file.readlines():
 					data = line.split(":=:")[0]
-					data2 = r'\b%s[a-z]{,4}\b' % data.replace("+","\+")
-					key2 = r'\b%s[a-z]{,4}\b' % key.replace("+","\+")
-					if re.search(key2, data, re.IGNORECASE) or re.search(data2, key, re.IGNORECASE):
-						if key.lower() is "": pass
-						else:
-							rcount = rcount+1
-							if matches == "": matches = data
-							else: matches = matches+", "+data
+					dlen = r'\b.{2,}\b'
+					if re.search(dlen, key, re.IGNORECASE):			
+						if key.lower() in data.lower() or data.lower() in key.lower():
+							if key.lower() is "": pass
+							else:
+								rcount = rcount+1
+								if matches == "": matches = data
+								else: matches = matches+", "+data
 				file.close()
 				if rcount < 1: msg = "I have no match for \"%s\"" % key
 				elif rcount == 1: msg = "I found 1 match: %s" % matches
@@ -157,34 +159,34 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 			else: ircbot.msg(dest, "I don't know anything yet!")
 
 		if cmd == "!nick":
-			if nick in ircbot.readconf("BOTMASTERS"):
+			if nick in ircbot.readconf("ADMIN"):
 				try: 
 					ircbot.send("NICK %s" % args[0])
 					ircbot.BOTNICK = args[0]
 				except: ircbot.msg(nick, "Error changing nickname to %s!" % args[0])
 
 		if cmd == "!join":
-			if nick in ircbot.readconf("BOTMASTERS"):
+			if nick in ircbot.readconf("ADMIN"):
 				try:
 					ircbot.join(args[0])
 					ircbot.msg(dest, "Joining %s" % args[0])
 				except: ircbot.msg(nick, "Error joining %s!" % args[0])
 
 		if cmd == "!part":
-			if nick in ircbot.readconf("BOTMASTERS"):
+			if nick in ircbot.readconf("ADMIN"):
 				try:
 					ircbot.part(args[0])
 					ircbot.msg(dest, "Parting %s" % args[0])
 				except: ircbot.msg(nick, "Error parting %s!" % args[0])
 
 		if cmd == "!quit":
-			if nick in ircbot.readconf("BOTMASTERS"):
+			if nick in ircbot.readconf("ADMIN"):
 				ircbot.quit()
 
 	else:
 		base_key = ("%s %s" % (cmd, ' '.join(args[0:]))).strip()
 		if ircbot.BOTNICK.lower() in base_key.lower() or pvt_msg:
-			if "help" in base_key.lower() or ircbot.BOTNICK.lower() is base_key.lower(): 
+			if "help" in base_key.lower(): 
 				msg = ircbot.readconf("HELP").replace("#botnick", ircbot.BOTNICK)
 				msg = msg.replace("#nick", nick)
 				ircbot.msg(dest, msg)
@@ -202,8 +204,7 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 					else: ircbot.msg(dest, "I don't know anything yet!")
 			# Couple of Easter eggs ;)
 			elif "42" in base_key.lower(): 
-				ircbot.msg(dest, "%s: 42 is the Answer to the Ultimate Question about Life, the Universe and Everything!" % nick)
-				ircbot.act(dest, "hides %s's brain from the mice!" % nick)
+				ircbot.msg(dest, "%s: It's the Answer to the Ultimate Question about Life, the Universe and Everything!" % nick)
 			elif "overlord" in base_key.lower(): 
 				ircbot.msg(dest, "BOW TO ME FOR I AM YOUR ROBOT OVERLORD!")
 			elif "girls" in base_key.lower(): 

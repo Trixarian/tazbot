@@ -1,5 +1,5 @@
-TazBot
-======
+TazBot 2.0
+==========
 
 TazBot is a Q & A Bot written to serve the users in the official SliTaz IRC channel on freenode.
 It's simple to use and it's answers database can be expanded on the fly using it's learning system.
@@ -18,24 +18,22 @@ Just edit tazbot.conf to what you want and type ./tazbot to connect.
 `topics` will bring up the topics the bot can answer questions about:  
 `TazBot: topics`
 
-Use the `!teach` command with the trigger and responses seperated by a `|` to teach the bot responses. Spaces don't matter, but the length is limited to the standard IRC message line (around 500 characters). Multiple lined responses is also supported and will be each be shown on their own line. If there is more than the set amount of lines (set in the conf file), the responses will be forwarded to the user.
+Use the `!learn` or `!teach` commands with the trigger and responses seperated by a `|` to teach the bot responses. Spaces don't matter, but the length is limited to the standard IRC message line (around 500 characters). Multiple lined responses is also supported and will be each be shown on their own line. If there is more than the set amount of lines (set in the conf file), the responses will be forwarded to the user.
 Triggers are searched by closest matches so single words or short triggers work better, but words can be searched within longer triggers:  
-`!teach This is a trigger | And this is a response!`  
+`!learn This is a trigger | And this is a response!`  
 `!teach Trigger | Line 1 | Line 2 | Oh My`
 
-The `!teach` command has some features like user nickname substituon by using #nick in the response and responding with actions by prefixing the response with a + (plus sign). You can also use #botnick to represent the bot's nick in responses:  
-`!teach How do I have sex? | Stop asking lame questions #nick!`  
-`!teach Awesomeness | Yes, #botnick is awesome!`  
-`!teach Do something!|+kisses #nick`
+It's possible to user nickname substituion by using `#nick` within the response or you can make the bot respond with actions by prefixing the response with a `+` (plus sign). You can also use `#botnick` to represent the bot's nick within responses:  
+`!learm How do I have sex? | Stop asking lame questions #nick! | +kicks #nick`  
+`!teach Awesomeness | Yes, #botnick is awesome!`
 
-The `!teach` command, when using an existing trigger with a single response, will overwrite the current trigger/response pair with the new pair. This was added for convience. Use the `!add` command to add single responses to existing triggers or use `!teach` with more than one response.
+The `!relearn` or `!reteach` commands can be used to overwrite the current trigger/response pairs with the new ones.
+`!relearn Replaced Trigger | And here's a new response!`  
+`!reteach Trigger | Line4 | LineX | LineAwesome`
 
 To see how many triggers match a phrase, use the `!find` command followed by the phrase:  
 `!find Joe`  
 `!find Trixar_za is God`
-
-You use the `!add` command to add a single response to an existing trigger:
-`!add Joe | He's awesome`
 
 To make TazBot forget a learned response use, the `!forget` command followed by the phrase:  
 `!forget Joe`  
@@ -49,3 +47,5 @@ Otherwise there is other simple commands to control the bot:
 `!join #chan` - Makes the bot join #chan  
 `!part #chan` - Makes the bot part #chan  
 `!quit` - Makes the bot quit
+
+The Bot also features a few easter eggs so try asking the bot about the number `42`, where all the `girls` are, if it's a kind robot `overlord` or what it thinks about `Windows 8`. ;)
