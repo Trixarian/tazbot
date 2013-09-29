@@ -23,8 +23,8 @@ Triggers are searched by closest matches so single words or short triggers work 
 `!learn This is a trigger | And this is a response!`  
 `!teach Trigger | Line 1 | Line 2 | Oh My`
 
-It's possible to user nickname substituion by using `#nick` within the response or you can make the bot respond with actions by prefixing the response with a `+` (plus sign). You can also use `#botnick` to represent the bot's nick within responses:  
-`!learm How do I have sex? | Stop asking lame questions #nick! | +kicks #nick`  
+It's possible to do user nickname substituion by using `#nick` within the response or you can make the bot respond with actions by prefixing the response with a `+` (plus sign). You can also use `#botnick` to represent the bot's nick within responses:  
+`!learn How do I have sex? | Stop asking lame questions #nick! | +kicks #nick`  
 `!teach Awesomeness | Yes, #botnick is awesome!`
 
 The `!relearn` or `!reteach` commands can be used to overwrite the current trigger/response pairs with the new ones.
