@@ -39,9 +39,6 @@ To make TazBot forget a learned response use, the `!forget` command followed by 
 `!forget Joe`  
 `!forget Trixar_za is dumb`
 
-To see how many responses TazBot has learned so far you can use the `!responses` command:  
-`!responses`
-
 Otherwise there is other simple commands to control the bot:  
 `!nick newnick` - Makes the bot change it's nickname to newnick  
 `!join #chan` - Makes the bot join #chan  
