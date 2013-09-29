@@ -88,13 +88,17 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 			if nick in ircbot.readconf("ADMIN"):
 				try:
 					data = ' '.join(args[0:])
-					key = data.split("|")[0].strip()
-					rnum = int(len(data.split("|"))-1)
-					if rnum >= 1: 
-						array = data.split("|")
-						for value in array:
-							dbwrite(key[0:], botfilter(value[0:].strip()), 1)
-					ircbot.msg(dest, "New response(s) learned for \"%s\"" % key)
+					if "|" in data:
+						key = data.split("|")[0].strip()
+						rnum = int(len(data.split("|"))-1)
+						if rnum >= 1: 
+							array = data.split("|")
+							skip = 0
+							for value in array:
+								if skip == 1: dbwrite(key[0:], botfilter(value[0:].strip()), 1)
+								else: skip = skip+1
+						ircbot.msg(dest, "New response(s) learned for \"%s\"" % key)
+					else: ircbot.msg(dest, "Sorry, there's a syntax error in that command!")
 				except: ircbot.msg(dest, "Sorry, I couldn't learn that!")
 			else: ircbot.msg(dest, "Sorry %s, only my masters can teach me!" % nick)
 			
@@ -102,20 +106,24 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 			if nick in ircbot.readconf("ADMIN"):
 				try:
 					data = ' '.join(args[0:])
-					key = data.split("|")[0].strip()
-					rnum = int(len(data.split("|"))-1)
-					if rnum >= 1: 
-						array = data.split("|")
-						rcount = 1
-						for value in array:
-							if rcount == 1:
-								dbwrite(key[0:], botfilter(value[0:]))
-								rcount = rcount+1
-							else:
-								dbwrite(key[0:], botfilter(value[0:].strip()), 1)
-								rcount = rcount+1
-					if rcount > 2: ircbot.msg(dest, "Responses retaught for \"%s\"" % key)
-					else: ircbot.msg(dest, "Response retaught for \"%s\"" % key)
+					if "|" in data:
+						key = data.split("|")[0].strip()
+						rnum = int(len(data.split("|"))-1)
+						if rnum >= 1: 
+							array = data.split("|")
+							rcount = 0
+							for value in array:
+								if rcount == 1:
+									dbwrite(key[0:], botfilter(value[0:]))
+									rcount = rcount+1
+								elif rcount > 1:
+									dbwrite(key[0:], botfilter(value[0:].strip()), 1)
+									rcount = rcount+1
+								else:
+									rcount = rcount+1
+						if rcount > 1: ircbot.msg(dest, "Responses retaught for \"%s\"" % key)
+						else: ircbot.msg(dest, "Response retaught for \"%s\"" % key)
+					else: ircbot.msg(dest, "Sorry, there's a syntax error in that command!")
 				except: ircbot.msg(dest, "Sorry, I couldn't relearn that!")
 			else: ircbot.msg(dest, "Sorry %s, only my masters can reteach me!" % nick)
 
@@ -130,13 +138,13 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 							if re.search(dlen, key, re.IGNORECASE):			
 								if key.lower() in data.lower() or data.lower() in key.lower():
 									pass
-							else: print line.strip()
+								else: print line.strip()
 						ircbot.msg(dest, "I've forgotten \"%s\"" % key)
 					except: ircbot.msg(dest, "Sorry, I couldn't forget that!")
 				else: ircbot.msg(dest, "You have to teach me something before you can make me forget it!")
 			else: ircbot.msg(dest, "Sorry %s, only my masters can make me forget!" % nick)
 
-		if cmd == "!find":
+		if cmd == "!find" or cmd == "!search":
 			key = ' '.join(args[0:]).strip()
 			if os.path.isfile("qdb.dat"):
 				rcount = 0
@@ -147,7 +155,7 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 					dlen = r'\b.{2,}\b'
 					if re.search(dlen, key, re.IGNORECASE):			
 						if key.lower() in data.lower() or data.lower() in key.lower():
-							if key.lower() is "": pass
+							if key.lower() == "": pass
 							else:
 								rcount = rcount+1
 								if matches == "": matches = data
@@ -212,6 +220,8 @@ def msg_parse(dest, nick, cmd, args, pvt_msg=0):
 			elif "windows 8" in base_key.lower():
 				ircbot.act(dest, "slaps %s" % nick)
 				ircbot.msg(dest, "Don't use that bloat! Use a Real OS like SliTaz instead! :D")
+			elif "xyzzy" in base_key.lower():
+				ircbot.msg(dest, "Nothing Happens")
 			else:
 				try:
 					reply = dbread(base_key).split("\n")
